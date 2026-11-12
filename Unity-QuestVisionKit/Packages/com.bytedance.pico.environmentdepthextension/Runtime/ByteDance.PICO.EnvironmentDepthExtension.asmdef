@@ -1,0 +1,17 @@
+{
+    "name": "ByteDance.PICO.EnvironmentDepthExtension",
+    "rootNamespace": "ByteDance.PICO.EnvironmentDepthExtension",
+    "references": [
+        "ByteDance.PICO.XR",
+        "Unity.Burst"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

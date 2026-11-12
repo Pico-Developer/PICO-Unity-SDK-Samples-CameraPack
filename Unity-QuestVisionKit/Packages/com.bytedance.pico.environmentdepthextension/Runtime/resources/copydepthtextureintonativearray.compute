@@ -1,0 +1,42 @@
+#pragma kernel CSMain
+
+Texture2DArray<float4> _EnvironmentDepthTexture;
+float4 _EnvironmentDepthZBufferParams;
+// Output (downsampled) grid size: the readback resolution, not the native one.
+float _EnvironmentDepthTextureSize;
+// Native source texture size; used for nearest-neighbour downsampling.
+float _SourceTextureSize;
+
+RWStructuredBuffer<float> _CopiedDepthTexture;
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    uint size = (uint)_EnvironmentDepthTextureSize;
+    if (size == 0)
+    {
+        return;
+    }
+
+    if (id.x >= size || id.y >= size)
+    {
+        return;
+    }
+
+    // Map the output texel to a source texel (nearest neighbour). When source
+    // and output sizes match, scale is 1 and this reduces to a direct copy.
+    uint srcSize = (uint)_SourceTextureSize;
+    float scale = srcSize / (float)size;
+    uint srcX = min((uint)((id.x + 0.5) * scale), srcSize - 1);
+    uint srcY = min((uint)((id.y + 0.5) * scale), srcSize - 1);
+
+    for (uint slice = 0; slice < 2; slice++)
+    {
+        float inputDepthEye = _EnvironmentDepthTexture.Load(int4((int)srcX, (int)srcY, (int)slice, 0)).r;
+        float inputDepthNdc = inputDepthEye * 2.0 - 1.0;
+        float denom = inputDepthNdc + _EnvironmentDepthZBufferParams.y;
+        float linearDepth = abs(denom) < 1e-6 ? 0.0 : (1.0 / denom) * _EnvironmentDepthZBufferParams.x;
+        uint idx = slice * size * size + id.y * size + id.x;
+        _CopiedDepthTexture[idx] = linearDepth;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "com.bytedance.pico.environmentdepthextension",
+  "displayName": "PICO Environment Depth Extension (Preview)",
+  "version": "0.5.0",
+  "unity": "2022.3",
+  "description": "PREVIEW / NOT FOR PRODUCTION USE. Extensions built on top of the PICO Unity (Swan) Environment Depth capability: depth data access, preview, and depth-based raycasting utilities. APIs and serialization layout are subject to change without notice.",
+  "dependencies": {
+    "com.unity.burst": "1.8.18"
+  },
+  "samples": [
+    {
+      "displayName": "Depth Preview & Raycast",
+      "description": "Sample scene showing environment depth preview and depth raycast visualization.",
+      "path": "Samples~/DepthPreviewRaycast"
+    }
+  ]
+}
